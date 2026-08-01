@@ -1,0 +1,1606 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes" />
+    <title>SPF Tech | منصة البرمجة والذكاء الاصطناعي</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet" />
+    <style>
+        /* ===== RESET & ROOT ===== */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg-primary: #f0f2f8;
+            --bg-secondary: #ffffff;
+            --bg-alt: #e8ecf4;
+            --text-primary: #0b0a1a;
+            --text-secondary: #4a4a6a;
+            --glass-bg: rgba(255,255,255,0.6);
+            --glass-border: rgba(255,255,255,0.4);
+            --shadow: 0 20px 60px rgba(0,0,0,0.06);
+            --shadow-hover: 0 30px 80px rgba(108,92,231,0.15);
+            --primary: #6c5ce7;
+            --gradient: linear-gradient(135deg, #6c5ce7, #fd79a8);
+            --radius: 24px;
+            --transition: 0.4s cubic-bezier(0.25,0.46,0.45,0.94);
+            --header-height: 0px;
+            --success: #00b894;
+            --danger: #e17055;
+            --warning: #fdcb6e;
+            --info: #0984e3;
+        }
+        [data-theme="dark"] {
+            --bg-primary: #0a0915;
+            --bg-secondary: #14132a;
+            --bg-alt: #1a1932;
+            --text-primary: #eef0ff;
+            --text-secondary: #9a9abf;
+            --glass-bg: rgba(30,28,58,0.7);
+            --glass-border: rgba(255,255,255,0.06);
+            --shadow: 0 20px 60px rgba(0,0,0,0.5);
+            --shadow-hover: 0 30px 80px rgba(108,92,231,0.25);
+        }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Cairo', sans-serif; background: var(--bg-primary); color: var(--text-primary); transition: background var(--transition), color var(--transition); line-height: 1.7; overflow-x: hidden; }
+        .container { max-width: 1280px; margin: 0 auto; padding: 0 20px; }
+        a { text-decoration: none; color: inherit; }
+        img { max-width: 100%; display: block; }
+        #particles-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+        .glass-card { background: var(--glass-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid var(--glass-border); border-radius: var(--radius); box-shadow: var(--shadow); }
+        .btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 12px 28px; border: none; border-radius: 60px; font-weight: 700; font-size: 1rem; cursor: pointer; transition: var(--transition); font-family: inherit; position: relative; overflow: hidden; z-index: 1; }
+        .btn-lg { padding: 16px 36px; font-size: 1.1rem; }
+        .btn-sm { padding: 8px 18px; font-size: 0.85rem; }
+        .btn-primary { background: var(--gradient); color: #fff; box-shadow: 0 8px 25px rgba(108,92,231,0.3); }
+        .btn-primary:hover { transform: translateY(-4px) scale(1.02); box-shadow: 0 15px 40px rgba(108,92,231,0.5); }
+        .btn-success { background: var(--success); color: #fff; }
+        .btn-success:hover { transform: translateY(-4px); box-shadow: 0 10px 30px rgba(0,184,148,0.4); }
+        .btn-outline { background: transparent; border: 2px solid var(--primary); color: var(--primary); }
+        .btn-outline:hover { background: var(--primary); color: #fff; transform: translateY(-4px); }
+        .btn-danger { background: var(--danger); color: #fff; }
+        .btn-danger:hover { transform: translateY(-4px); box-shadow: 0 10px 30px rgba(225,112,85,0.4); }
+        .btn-google { background: #fff; color: #1a1a2e; border: 1px solid #e0e0e0; }
+        .btn-google:hover { background: #f5f5ff; transform: translateY(-2px); }
+        .full-width { width: 100%; }
+        /* ===== HEADER ===== */
+        .header { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; padding: 14px 0; background: var(--glass-bg); backdrop-filter: blur(20px); border-bottom: 1px solid var(--glass-border); transition: var(--transition); }
+        .header.scrolled { padding: 8px 0; background: var(--bg-secondary); box-shadow: 0 4px 30px rgba(0,0,0,0.08); }
+        .nav-container { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+        .logo { display: flex; align-items: center; gap: 8px; font-size: 1.6rem; font-weight: 900; }
+        .logo-img { height: 40px; }
+        .logo span { color: var(--primary); }
+        .nav-links { display: flex; gap: 24px; flex-wrap: wrap; }
+        .nav-links a { font-weight: 600; color: var(--text-secondary); transition: var(--transition); position: relative; font-size: 0.95rem; }
+        .nav-links a:hover { color: var(--primary); }
+        .nav-links a::after { content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 2px; background: var(--gradient); transition: var(--transition); }
+        .nav-links a:hover::after { width: 100%; }
+        .nav-actions { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+        .search-box { position: relative; }
+        .search-box input { padding: 8px 16px 8px 38px; border-radius: 60px; border: none; background: var(--bg-secondary); color: var(--text-primary); width: 160px; transition: var(--transition); box-shadow: 0 2px 10px rgba(0,0,0,0.02); font-size: 0.9rem; }
+        .search-box input:focus { width: 220px; outline: 2px solid var(--primary); }
+        .search-box i { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); color: var(--text-secondary); font-size: 0.9rem; }
+        .theme-toggle { background: var(--bg-secondary); border: none; font-size: 1.2rem; padding: 8px; border-radius: 50%; cursor: pointer; color: var(--text-primary); transition: var(--transition); box-shadow: 0 2px 10px rgba(0,0,0,0.02); width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; }
+        .theme-toggle:hover { transform: rotate(20deg); }
+        .mobile-menu-btn { display: none; background: none; border: none; font-size: 1.6rem; color: var(--text-primary); padding: 4px; }
+        /* ===== MAIN CONTENT ===== */
+        .main-content { position: relative; z-index: 1; padding-top: var(--header-height, 80px); transition: padding-top 0.2s ease; }
+        /* ===== HERO ===== */
+        .hero { padding: 40px 0 60px; min-height: 90vh; display: flex; align-items: center; position: relative; overflow: hidden; }
+        .hero::before { content: ''; position: absolute; top: -30%; right: -10%; width: 500px; height: 500px; background: radial-gradient(circle, rgba(108,92,231,0.12) 0%, transparent 70%); border-radius: 50%; animation: floatBg 10s ease-in-out infinite; }
+        @keyframes floatBg { 0% { transform: translate(0,0) scale(1); } 50% { transform: translate(-30px,20px) scale(1.1); } 100% { transform: translate(0,0) scale(1); } }
+        .hero-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; position: relative; z-index: 2; }
+        .hero-text .badge { display: inline-block; background: var(--gradient); color: #fff; padding: 4px 16px; border-radius: 60px; font-weight: 600; font-size: 0.8rem; margin-bottom: 16px; }
+        .hero-text h1 { font-size: 3rem; font-weight: 900; line-height: 1.15; min-height: 90px; }
+        .hero-text h1 .typed-text { background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero-text h1 .cursor { display: inline-block; width: 3px; background: var(--primary); margin-right: 4px; animation: blink 0.8s step-end infinite; }
+        @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0; } }
+        .hero-text p { font-size: 1.1rem; color: var(--text-secondary); margin: 20px 0 28px; max-width: 90%; }
+        .hero-buttons { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 30px; }
+        .hero-stats { display: flex; gap: 30px; flex-wrap: wrap; }
+        .hero-stats strong { font-size: 1.4rem; display: block; color: var(--primary); }
+        .hero-visual { position: relative; min-height: 300px; display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 30px; }
+        .orb { position: absolute; width: 250px; height: 250px; background: var(--gradient); border-radius: 50%; opacity: 0.12; filter: blur(70px); animation: pulse 6s ease-in-out infinite; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.3); } 100% { transform: scale(1); } }
+        .hero-logo { width: 160px; height: auto; z-index: 1; filter: drop-shadow(0 20px 40px rgba(108,92,231,0.25)); animation: logoFloat 4s ease-in-out infinite; }
+        @keyframes logoFloat { 0% { transform: translateY(0); } 50% { transform: translateY(-12px); } 100% { transform: translateY(0); } }
+        .float-card { position: absolute; background: var(--bg-secondary); padding: 8px 18px; border-radius: 60px; font-weight: 700; box-shadow: var(--shadow); display: flex; align-items: center; gap: 8px; animation: floatCard 5s ease-in-out infinite; border: 1px solid var(--glass-border); z-index: 2; font-size: 0.9rem; }
+        .float-card i { color: var(--primary); }
+        .c1 { top: 10px; left: 10px; animation-delay: 0s; }
+        .c2 { bottom: 20px; right: 10px; animation-delay: 1.5s; }
+        .c3 { top: 50%; right: 0; animation-delay: 3s; }
+        @keyframes floatCard { 0% { transform: translateY(0); } 50% { transform: translateY(-12px); } 100% { transform: translateY(0); } }
+        /* ===== SECTION ===== */
+        .section { padding: 60px 0; position: relative; z-index: 1; }
+        .bg-alt { background: var(--bg-alt); transition: background var(--transition); }
+        .section-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 32px; flex-wrap: wrap; gap: 10px; }
+        .section-header h2 { font-size: 2rem; font-weight: 800; }
+        .section-header p { color: var(--text-secondary); }
+        .link-more { font-weight: 700; color: var(--primary); display: flex; align-items: center; gap: 8px; transition: var(--transition); }
+        .link-more:hover { gap: 14px; }
+        .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 24px; }
+        .item-card { background: var(--bg-secondary); border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow); border: 1px solid var(--glass-border); transition: var(--transition); display: flex; flex-direction: column; gap: 12px; }
+        .item-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-hover); border-color: var(--primary); }
+        .item-card .item-icon { font-size: 2.5rem; color: var(--primary); text-align: center; }
+        .item-card .item-title { font-size: 1.2rem; font-weight: 700; }
+        .item-card .item-desc { color: var(--text-secondary); font-size: 0.95rem; flex: 1; }
+        .item-card .item-price { font-weight: 700; color: var(--primary); font-size: 1.1rem; }
+        .item-card .btn { width: 100%; margin-top: 8px; }
+        /* ===== ABOUT ===== */
+        .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
+        .about-text h2 { font-size: 2rem; font-weight: 800; margin-bottom: 16px; }
+        .about-text h2 span { color: var(--primary); }
+        .about-text p { color: var(--text-secondary); margin-bottom: 16px; }
+        .about-image img { border-radius: var(--radius); box-shadow: var(--shadow); max-width: 100%; }
+        /* ===== WALLET ===== */
+        #walletSection { scroll-margin-top: 80px; }
+        .wallet-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+        .wallet-card { padding: 24px; text-align: center; }
+        .wallet-card .balance { font-size: 2.8rem; font-weight: 900; color: var(--primary); margin: 10px 0; }
+        .wallet-card .balance small { font-size: 1.2rem; font-weight: 400; color: var(--text-secondary); }
+        .wallet-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 16px; }
+        #depositSection { scroll-margin-top: 80px; display: none; }
+        #depositSection.active { display: block; }
+        .deposit-form-card { max-width: 480px; width: 100%; margin: 0 auto; padding: 30px 28px; }
+        .deposit-form-card h3 { font-size: 1.6rem; font-weight: 800; margin-bottom: 20px; display: flex; align-items: center; gap: 12px; }
+        .deposit-form-card h3 i { color: var(--primary); }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-weight: 700; margin-bottom: 6px; font-size: 0.95rem; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 12px 16px; border: 1px solid var(--glass-border); border-radius: 14px; background: var(--bg-secondary); color: var(--text-primary); font-family: inherit; transition: var(--transition); font-size: 1rem; }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: 2px solid var(--primary); border-color: transparent; box-shadow: 0 0 0 4px rgba(108,92,231,0.1); }
+        .toggle-deposit-btn { margin-top: 12px; }
+        /* ===== TRANSACTIONS ===== */
+        #transactionsSection { scroll-margin-top: 80px; }
+        .transactions-list { display: flex; flex-direction: column; gap: 12px; }
+        .transaction-item { background: var(--bg-secondary); border: 1px solid var(--glass-border); border-radius: 16px; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; transition: var(--transition); box-shadow: var(--shadow); }
+        .transaction-item:hover { transform: translateX(-6px); border-color: var(--primary); }
+        .transaction-info { display: flex; flex-direction: column; gap: 4px; }
+        .transaction-info .amount { font-size: 1.2rem; font-weight: 700; }
+        .transaction-info .amount.positive { color: var(--success); }
+        .transaction-info .amount.negative { color: var(--danger); }
+        .transaction-info .details { font-size: 0.9rem; color: var(--text-secondary); display: flex; gap: 16px; flex-wrap: wrap; }
+        .transaction-info .details span { display: flex; align-items: center; gap: 6px; }
+        .status { padding: 4px 16px; border-radius: 60px; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+        .status.pending { background: var(--warning); color: #2d3436; }
+        .status.approved { background: var(--success); color: #fff; }
+        .status.rejected { background: var(--danger); color: #fff; }
+        /* ===== CONTACT ===== */
+        .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+        .contact-info { display: flex; flex-direction: column; gap: 20px; }
+        .contact-item { display: flex; align-items: center; gap: 16px; padding: 16px 20px; background: var(--bg-secondary); border-radius: var(--radius); box-shadow: var(--shadow); border: 1px solid var(--glass-border); transition: var(--transition); }
+        .contact-item:hover { transform: translateX(-8px); border-color: var(--primary); }
+        .contact-item i { font-size: 1.6rem; color: var(--primary); width: 40px; text-align: center; }
+        .contact-item .info { flex: 1; }
+        .contact-item .info h4 { font-weight: 700; font-size: 1rem; }
+        .contact-item .info p { color: var(--text-secondary); font-size: 0.95rem; }
+        .contact-item .info a { color: var(--primary); font-weight: 600; }
+        .contact-form { padding: 30px; }
+        .contact-form h3 { font-size: 1.6rem; margin-bottom: 8px; }
+        .contact-form p { color: var(--text-secondary); margin-bottom: 20px; }
+        .contact-form textarea { min-height: 120px; resize: vertical; }
+        /* ===== MODAL ===== */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(12px); display: none; align-items: center; justify-content: center; z-index: 9999; padding: 20px; }
+        .modal-overlay.active { display: flex; }
+        .modal { max-width: 440px; width: 100%; padding: 30px 28px; position: relative; max-height: 90vh; overflow-y: auto; }
+        .modal-close { position: absolute; top: 12px; left: 16px; background: var(--bg-alt); border: none; width: 36px; height: 36px; border-radius: 50%; font-size: 1.1rem; cursor: pointer; color: var(--text-secondary); transition: var(--transition); }
+        .modal-close:hover { background: var(--primary); color: #fff; }
+        .auth-form { display: none; }
+        .auth-form.active { display: block; animation: fadeUp 0.4s ease; }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .auth-form h3 { font-size: 1.6rem; font-weight: 800; }
+        .auth-form p { color: var(--text-secondary); margin-bottom: 18px; }
+        .auth-form .form-group { margin-bottom: 14px; }
+        .auth-form .form-group label { display: block; font-weight: 700; margin-bottom: 4px; font-size: 0.9rem; }
+        .auth-form .form-group input { width: 100%; padding: 12px 16px; border: 1px solid var(--glass-border); border-radius: 14px; background: var(--bg-secondary); color: var(--text-primary); font-family: inherit; transition: var(--transition); }
+        .auth-form .form-group input:focus { outline: 2px solid var(--primary); border-color: transparent; box-shadow: 0 0 0 4px rgba(108,92,231,0.1); }
+        .auth-switch { margin-top: 16px; text-align: center; font-size: 0.9rem; }
+        .auth-switch span { color: var(--primary); font-weight: 700; cursor: pointer; transition: var(--transition); }
+        .auth-switch span:hover { text-decoration: underline; }
+        /* ===== FOOTER ===== */
+        .footer { background: var(--bg-secondary); border-top: 1px solid var(--glass-border); padding: 50px 0 20px; margin-top: 30px; position: relative; z-index: 1; }
+        .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 30px; margin-bottom: 30px; }
+        .footer-grid h3 { font-size: 1.6rem; font-weight: 900; }
+        .footer-grid h3 span { color: var(--primary); }
+        .footer-grid h4 { margin-bottom: 10px; }
+        .footer-grid a { display: block; color: var(--text-secondary); margin-bottom: 6px; transition: var(--transition); }
+        .footer-grid a:hover { color: var(--primary); }
+        .footer-bottom { text-align: center; padding-top: 16px; border-top: 1px solid var(--glass-border); color: var(--text-secondary); font-size: 0.9rem; }
+        /* ===== TOAST ===== */
+        .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--bg-secondary); color: var(--text-primary); padding: 16px 32px; border-radius: 60px; box-shadow: var(--shadow-hover); border: 1px solid var(--glass-border); font-weight: 600; z-index: 99999; opacity: 0; transition: all 0.4s ease; backdrop-filter: blur(12px); text-align: center; max-width: 90%; font-size: 1rem; }
+        .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+        .toast.success { border-color: var(--success); color: var(--success); }
+        .toast.error { border-color: var(--danger); color: var(--danger); }
+        .toast.warning { border-color: var(--warning); color: var(--warning); }
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 992px) {
+            .hero-grid, .wallet-grid, .contact-grid, .about-grid { grid-template-columns: 1fr; text-align: center; }
+            .hero-text p { max-width: 100%; }
+            .hero-buttons { justify-content: center; }
+            .hero-stats { justify-content: center; }
+            .footer-grid { grid-template-columns: 1fr; text-align: center; }
+            .float-card { display: none; }
+            .contact-item { flex-direction: column; text-align: center; }
+            .contact-item:hover { transform: translateX(0) scale(1.02); }
+            .about-image { order: -1; }
+            .about-image img { max-width: 200px; margin: 0 auto; }
+        }
+        @media (max-width: 768px) {
+            .search-box input { width: 110px; font-size: 0.8rem; padding: 6px 12px 6px 30px; }
+            .search-box input:focus { width: 150px; }
+            .hero { padding: 30px 0 40px; min-height: auto; }
+            .hero-text h1 { font-size: 2.2rem; min-height: 70px; }
+            .hero-visual { min-height: 200px; padding: 20px; }
+            .hero-logo { width: 120px; }
+            .section { padding: 40px 0; }
+            .section-header h2 { font-size: 1.6rem; }
+            .card-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 16px; }
+            .wallet-card .balance { font-size: 2rem; }
+            .modal { padding: 20px 16px; }
+            .btn-lg { padding: 12px 24px; font-size: 1rem; }
+            .nav-actions .auth-section .btn-sm { padding: 6px 12px; font-size: 0.75rem; }
+            .theme-toggle { width: 34px; height: 34px; font-size: 1rem; }
+            .logo { font-size: 1.3rem; }
+            .logo-img { height: 32px; }
+            .transaction-item { flex-direction: column; align-items: stretch; text-align: center; }
+            .transaction-info .details { justify-content: center; }
+            .status { align-self: center; }
+            .deposit-form-card { padding: 20px 16px; }
+            .contact-form { padding: 20px 16px; }
+            .nav-links { gap: 12px; }
+            .nav-links a { font-size: 0.8rem; }
+            .main-content { padding-top: var(--header-height, 70px); }
+            .mobile-menu-btn { display: block; }
+            #navLinks { display: none; }
+            #navLinks.open { display: flex !important; flex-direction: column; position: absolute; top: 100%; right: 0; background: var(--bg-secondary); padding: 20px; border-radius: 0 0 20px 20px; box-shadow: var(--shadow); width: 100%; gap: 12px; z-index: 999; }
+        }
+        @media (max-width: 480px) {
+            .container { padding: 0 12px; }
+            .hero-text h1 { font-size: 1.8rem; }
+            .hero-stats strong { font-size: 1.2rem; }
+            .hero-stats { gap: 16px; }
+            .card-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+            .btn { padding: 8px 16px; font-size: 0.85rem; }
+            .btn-lg { padding: 10px 20px; font-size: 0.9rem; }
+            .form-group { margin-bottom: 16px; }
+            .main-content { padding-top: var(--header-height, 60px); }
+        }
+        /* ===== زر دخول الأعضاء المدفوعين ===== */
+        .btn-premium {
+            background: linear-gradient(135deg, #f7971e, #ffd200);
+            color: #1a1a2e;
+            font-weight: 800;
+            border: none;
+            box-shadow: 0 4px 15px rgba(247, 151, 30, 0.4);
+        }
+        .btn-premium:hover {
+            transform: translateY(-3px) scale(1.03);
+            box-shadow: 0 8px 25px rgba(247, 151, 30, 0.6);
+        }
+        .btn-premium i {
+            color: #1a1a2e;
+        }
+        /* ===== رسائل الخطأ ===== */
+        .error-box {
+            background: rgba(225, 112, 85, 0.15);
+            border: 1px solid var(--danger);
+            border-radius: 12px;
+            padding: 12px 16px;
+            margin: 8px 0;
+            color: var(--danger);
+            font-size: 0.9rem;
+        }
+        .error-box i {
+            margin-left: 8px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== PARTICLES ===== -->
+    <canvas id="particles-canvas"></canvas>
+
+    <!-- ===== HEADER ===== -->
+    <header class="header" id="mainHeader">
+        <div class="container nav-container">
+            <a href="#" class="logo">
+                <img src="https://i.postimg.cc/7Y3fS6KN/1785430677288.png" alt="SPF Tech" class="logo-img" />
+                <span>SPF</span> Tech
+            </a>
+            <nav class="nav-links" id="navLinks">
+                <a href="#hero">الرئيسية</a>
+                <a href="#about">من نحن</a>
+                <a href="#courses">كورسات</a>
+                <a href="#tools">أدوات</a>
+                <a href="#apps">تطبيقات</a>
+                <a href="#walletSection">المحفظة</a>
+                <a href="#transactionsSection">العمليات</a>
+                <a href="#contact">تواصل</a>
+            </nav>
+            <div class="nav-actions">
+                <div class="search-box">
+                    <input type="text" placeholder="ابحث..." id="searchInput" />
+                    <i class="fas fa-search"></i>
+                </div>
+                <button class="theme-toggle" id="themeToggle"><i class="fas fa-moon"></i></button>
+                <div class="auth-section" id="authSection">
+                    <!-- زر الدخول العادي -->
+                    <button class="btn btn-primary btn-sm" id="loginOpenBtn">دخول</button>
+                    <!-- زر دخول الأعضاء المدفوعين (الأدمن) -->
+                    <button class="btn btn-premium btn-sm" id="premiumLoginBtn">
+                        <i class="fas fa-crown"></i> دخول أعضاء مدفوع
+                    </button>
+                </div>
+                <button class="mobile-menu-btn" id="mobileMenuBtn"><i class="fas fa-bars"></i></button>
+            </div>
+        </div>
+    </header>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <main class="main-content" id="mainContent">
+
+        <!-- ===== HERO ===== -->
+        <section class="hero" id="hero">
+            <div class="container hero-grid">
+                <div class="hero-text">
+                    <span class="badge">🚀 مستقبل التكنولوجيا بين يديك</span>
+                    <h1><span class="typed-text" id="typedText"></span><span class="cursor">|</span></h1>
+                    <p>منصة متكاملة تضم آلاف الساعات من الفيديوهات، المقالات، والأدوات التفاعلية المجانية والمدفوعة.</p>
+                    <div class="hero-buttons">
+                        <button class="btn btn-primary btn-lg" id="heroStartBtn">ابدأ الآن مجاناً <i class="fas fa-arrow-left"></i></button>
+                        <button class="btn btn-outline btn-lg" id="heroExploreBtn">استكشف الكورسات</button>
+                    </div>
+                    <div class="hero-stats">
+                        <span><strong class="counter" data-target="10000">0</strong>+ طالب</span>
+                        <span><strong class="counter" data-target="200">0</strong>+ فيديو</span>
+                        <span><strong class="counter" data-target="50">0</strong>+ كورس</span>
+                    </div>
+                </div>
+                <div class="hero-visual glass-card">
+                    <div class="orb"></div>
+                    <img src="https://i.postimg.cc/7Y3fS6KN/1785430677288.png" alt="SPF Tech" class="hero-logo" />
+                    <div class="float-card c1"><i class="fas fa-code"></i> Python</div>
+                    <div class="float-card c2"><i class="fas fa-brain"></i> AI</div>
+                    <div class="float-card c3"><i class="fas fa-cloud"></i> Cloud</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== ABOUT ===== -->
+        <section class="section bg-alt" id="about">
+            <div class="container">
+                <div class="about-grid">
+                    <div class="about-text">
+                        <h2>من نحن <span>SPF Tech</span></h2>
+                        <p><strong>SPF Tech</strong> هي منصة تعليمية عربية تأسست بهدف تبسيط علوم البرمجة والذكاء الاصطناعي وتقنيات المستقبل. نؤمن بأن المعرفة التقنية يجب أن تكون متاحة للجميع، لذلك نقدم محتوى متنوع بين الفيديوهات التفاعلية، المقالات المتخصصة، والأدوات التطبيقية.</p>
+                        <p>فريقنا مكون من خبراء في البرمجة، تصميم تجربة المستخدم، وتحليل البيانات، يعملون باستمرار على تطوير المحتوى ومواكبة أحدث التطورات.</p>
+                        <button class="btn btn-primary" id="aboutJoinBtn">انضم للمجتمع <i class="fas fa-arrow-left"></i></button>
+                    </div>
+                    <div class="about-image">
+                        <img src="https://i.postimg.cc/7Y3fS6KN/1785430677288.png" alt="SPF Tech" />
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== COURSES ===== -->
+        <section class="section" id="courses">
+            <div class="container">
+                <div class="section-header">
+                    <div><h2>📚 الكورسات</h2><p>اختر مسارك التعليمي وابدأ التعلم الآن</p></div>
+                    <a href="#" class="link-more">عرض الكل <i class="fas fa-arrow-left"></i></a>
+                </div>
+                <div class="card-grid" id="coursesGrid"></div>
+            </div>
+        </section>
+
+        <!-- ===== TOOLS ===== -->
+        <section class="section bg-alt" id="tools">
+            <div class="container">
+                <div class="section-header">
+                    <div><h2>🛠️ الأدوات</h2><p>أدوات برمجية تساعدك في مشاريعك</p></div>
+                    <a href="#" class="link-more">عرض الكل <i class="fas fa-arrow-left"></i></a>
+                </div>
+                <div class="card-grid" id="toolsGrid"></div>
+            </div>
+        </section>
+
+        <!-- ===== APPS ===== -->
+        <section class="section" id="apps">
+            <div class="container">
+                <div class="section-header">
+                    <div><h2>📱 التطبيقات</h2><p>تطبيقات جاهزة للاستخدام والتحميل</p></div>
+                    <a href="#" class="link-more">عرض الكل <i class="fas fa-arrow-left"></i></a>
+                </div>
+                <div class="card-grid" id="appsGrid"></div>
+            </div>
+        </section>
+
+        <!-- ===== WALLET ===== -->
+        <section class="section" id="walletSection">
+            <div class="container">
+                <div class="section-header">
+                    <div><h2>💰 المحفظة</h2><p>إدارة رصيدك وعملياتك المالية</p></div>
+                </div>
+                <div class="wallet-grid">
+                    <div class="wallet-card glass-card">
+                        <h3><i class="fas fa-wallet"></i> رصيدك الحالي</h3>
+                        <div class="balance" id="userBalance">0.00 <small>ج.م</small></div>
+                        <p style="color:var(--text-secondary);">يمكنك إيداع الأموال لشراء المحتوى المدفوع</p>
+                        <div class="wallet-actions">
+                            <button class="btn btn-success" id="depositTrigger"><i class="fas fa-plus-circle"></i> إيداع</button>
+                            <button class="btn btn-danger" id="withdrawTrigger"><i class="fas fa-minus-circle"></i> سحب</button>
+                            <button class="btn btn-primary" id="refreshBalanceBtn"><i class="fas fa-sync"></i> تحديث</button>
+                        </div>
+                        <button class="btn btn-outline toggle-deposit-btn" id="toggleDepositBtn"><i class="fas fa-chevron-down"></i> إظهار نموذج الإيداع</button>
+                    </div>
+                    <div class="wallet-card glass-card">
+                        <h3><i class="fas fa-chart-line"></i> إحصائيات</h3>
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:16px;">
+                            <div><div style="font-size:0.8rem; color:var(--text-secondary);">إجمالي الإيداعات</div><div style="font-size:1.4rem; font-weight:700; color:var(--success);" id="totalDeposits">0.00 ج.م</div></div>
+                            <div><div style="font-size:0.8rem; color:var(--text-secondary);">إجمالي المشتريات</div><div style="font-size:1.4rem; font-weight:700; color:var(--danger);" id="totalPurchases">0.00 ج.م</div></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- ===== نموذج الإيداع ===== -->
+                <div id="depositSection">
+                    <div style="max-width:600px; margin:30px auto 0;">
+                        <div class="deposit-form-card glass-card">
+                            <h3><i class="fas fa-hand-holding-usd"></i> طلب إيداع جديد</h3>
+                            <form id="depositForm">
+                                <div class="form-group">
+                                    <label for="depositAmount">قيمة الإيداع (ج.م) * الحد الأدنى 20</label>
+                                    <input type="number" id="depositAmount" placeholder="أدخل المبلغ" min="20" step="0.01" required />
+                                </div>
+                                <div class="form-group">
+                                    <label for="paymentMethod">وسيلة الدفع</label>
+                                    <select id="paymentMethod" required>
+                                        <option value="">-- اختر --</option>
+                                        <option value="vodafone">فودافون كاش</option>
+                                        <option value="instapay">إنستا باي</option>
+                                        <option value="bank">تحويل بنكي</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="whatsappNumber">رقم واتساب المحول منه</label>
+                                    <input type="text" id="whatsappNumber" placeholder="مثال: 0123456789" required />
+                                </div>
+                                <div class="form-group">
+                                    <label for="transactionId">رقم العملية (مرجع الدفع)</label>
+                                    <input type="text" id="transactionId" placeholder="مثال: 123456789" required />
+                                </div>
+                                <button type="submit" class="btn btn-success full-width"><i class="fas fa-paper-plane"></i> إرسال الطلب</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== TRANSACTIONS ===== -->
+        <section class="section bg-alt" id="transactionsSection">
+            <div class="container">
+                <div class="section-header">
+                    <div><h2>📜 سجل العمليات</h2><p>جميع عمليات الإيداع والشراء</p></div>
+                </div>
+                <div class="transactions-list" id="transactionsList"></div>
+            </div>
+        </section>
+
+        <!-- ===== CONTACT ===== -->
+        <section class="section" id="contact">
+            <div class="container">
+                <div class="section-header">
+                    <div><h2>📞 تواصل معنا</h2><p>نحن هنا لخدمتك، تواصل معنا عبر أي من القنوات التالية</p></div>
+                </div>
+                <div class="contact-grid">
+                    <div class="contact-info">
+                        <div class="contact-item"><i class="fab fa-whatsapp"></i><div class="info"><h4>واتساب</h4><p><a href="https://wa.me/201286131419" target="_blank">01286131419</a></p></div></div>
+                        <div class="contact-item"><i class="fas fa-phone-alt"></i><div class="info"><h4>الهاتف</h4><p><a href="tel:+201090070592">01090070592</a></p></div></div>
+                        <div class="contact-item"><i class="fas fa-envelope"></i><div class="info"><h4>البريد الإلكتروني</h4><p><a href="mailto:hem3tek@gmail.com">hem3tek@gmail.com</a></p></div></div>
+                    </div>
+                    <div class="contact-form glass-card">
+                        <h3>أرسل لنا رسالة</h3>
+                        <p>سنرد عليك في أقرب وقت</p>
+                        <form id="contactForm">
+                            <div class="form-group"><input type="text" id="contactName" placeholder="الاسم الكامل" required /></div>
+                            <div class="form-group"><input type="email" id="contactEmail" placeholder="البريد الإلكتروني" required /></div>
+                            <div class="form-group"><textarea id="contactMessage" placeholder="نص الرسالة..." required></textarea></div>
+                            <button type="submit" class="btn btn-primary full-width">إرسال <i class="fas fa-paper-plane"></i></button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div><h3>SPF<span>Tech</span></h3><p>منصة عربية متخصصة في تعليم البرمجة والتقنيات الحديثة.</p><p style="margin-top:8px; font-size:0.9rem; color:var(--text-secondary);"><i class="fas fa-envelope"></i> hem3tek@gmail.com</p></div>
+                <div><h4>روابط سريعة</h4><a href="#courses">الكورسات</a><a href="#tools">الأدوات</a><a href="#apps">التطبيقات</a><a href="#walletSection">المحفظة</a><a href="#transactionsSection">العمليات</a><a href="#contact">تواصل معنا</a></div>
+                <div><h4>الدعم</h4><a href="#">سياسة الخصوصية</a><a href="#">الشروط والأحكام</a><a href="#">الأسئلة الشائعة</a></div>
+            </div>
+            <div class="footer-bottom">© 2026 SPF Tech - جميع الحقوق محفوظة</div>
+        </div>
+    </footer>
+
+    <!-- ===== AUTH MODAL ===== -->
+    <div class="modal-overlay" id="authModal">
+        <div class="modal glass-card">
+            <button class="modal-close" id="authModalClose"><i class="fas fa-times"></i></button>
+            <div class="modal-body">
+                <div class="auth-form active" id="loginForm">
+                    <h3>مرحباً بعودتك 👋</h3>
+                    <p>سجل دخولك للوصول إلى كل المحتوى</p>
+                    <form id="loginFormElement">
+                        <div class="form-group"><label>البريد الإلكتروني</label><input type="email" id="loginEmail" placeholder="example@mail.com" /></div>
+                        <div class="form-group"><label>كلمة المرور</label><input type="password" id="loginPassword" placeholder="••••••••" /></div>
+                        <button type="submit" class="btn btn-primary full-width">دخول</button>
+                        <button type="button" class="btn btn-google full-width" id="googleLoginBtn"><i class="fab fa-google"></i> الدخول بجوجل</button>
+                    </form>
+                    <p class="auth-switch"><span id="showReset">نسيت كلمة المرور؟</span></p>
+                    <p class="auth-switch">ليس لديك حساب؟ <span id="showRegister">إنشاء حساب</span></p>
+                    <div style="margin-top:16px; padding:10px; background: rgba(247,151,30,0.15); border-radius:12px; border-right: 3px solid #f7971e;">
+                        <p style="font-size:0.85rem; color:var(--text-secondary); margin:0;">
+                            <i class="fas fa-crown" style="color:#f7971e;"></i>
+                            <strong>دخول أعضاء مدفوع:</strong> استخدم البريد الإلكتروني الخاص بك وكلمة المرور المسجلة.
+                        </p>
+                    </div>
+                </div>
+                <div class="auth-form" id="registerForm">
+                    <h3>إنشاء حساب جديد 🚀</h3>
+                    <form id="registerFormElement">
+                        <div class="form-group"><label>الاسم الكامل</label><input type="text" id="regName" placeholder="أحمد محمد" required /></div>
+                        <div class="form-group"><label>البريد الإلكتروني</label><input type="email" id="regEmail" placeholder="example@mail.com" required /></div>
+                        <div class="form-group"><label>رقم واتساب</label><input type="text" id="regWhatsapp" placeholder="0123456789" required /></div>
+                        <div class="form-group"><label>كلمة المرور</label><input type="password" id="regPassword" placeholder="••••••••" required /></div>
+                        <button type="submit" class="btn btn-primary full-width">إنشاء الحساب</button>
+                    </form>
+                    <p class="auth-switch">عندك حساب؟ <span id="showLogin">سجل دخول</span></p>
+                </div>
+                <div class="auth-form" id="resetForm">
+                    <h3>استعادة كلمة المرور 🔑</h3>
+                    <form id="resetFormElement">
+                        <div class="form-group"><label>البريد الإلكتروني</label><input type="email" id="resetEmail" placeholder="example@mail.com" /></div>
+                        <button type="submit" class="btn btn-primary full-width">إرسال رابط الاستعادة</button>
+                    </form>
+                    <p class="auth-switch"><span id="showLoginFromReset">تذكرت؟ ارجع للدخول</span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== TOAST ===== -->
+    <div class="toast" id="toast"></div>
+
+    <!-- ============================================================
+    FIREBASE & SCRIPTS
+    ============================================================ -->
+    <script type="importmap">
+        {
+            "imports": {
+                "firebase/app": "https://www.gstatic.com/firebasejs/12.17.0/firebase-app.js",
+                "firebase/auth": "https://www.gstatic.com/firebasejs/12.17.0/firebase-auth.js",
+                "firebase/firestore": "https://www.gstatic.com/firebasejs/12.17.0/firebase-firestore.js"
+            }
+        }
+    </script>
+
+    <script type="module">
+        // ============================================================
+        // IMPORTS
+        // ============================================================
+        import { initializeApp } from "firebase/app";
+        import {
+            getAuth,
+            createUserWithEmailAndPassword,
+            signInWithEmailAndPassword,
+            signInWithPopup,
+            GoogleAuthProvider,
+            onAuthStateChanged,
+            signOut,
+            sendPasswordResetEmail,
+            updateProfile
+        } from "firebase/auth";
+        import {
+            getFirestore,
+            doc,
+            setDoc,
+            getDoc,
+            getDocs,
+            updateDoc,
+            collection,
+            query,
+            orderBy,
+            addDoc,
+            serverTimestamp,
+            increment,
+            runTransaction,
+            where,
+            onSnapshot
+        } from "firebase/firestore";
+
+        // ============================================================
+        // CONFIG
+        // ============================================================
+        const firebaseConfig = {
+            apiKey: "AIzaSyBzSDZx6c513pJ_8Ys90ibOL1kuOD4uKt0",
+            authDomain: "jfjfd-400e4.firebaseapp.com",
+            projectId: "jfjfd-400e4",
+            storageBucket: "jfjfd-400e4.firebasestorage.app",
+            messagingSenderId: "939877862076",
+            appId: "1:939877862076:web:07942f05b2bd2499871eb9"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const provider = new GoogleAuthProvider();
+
+        // ============================================================
+        // ADMIN EMAIL
+        // ============================================================
+        const ADMIN_EMAIL = "faraj3940@gmail.com";
+
+        // ============================================================
+        // TELEGRAM (لإرسال الإشعارات)
+        // ============================================================
+        const BOT_TOKEN = "8735049155:AAHJCRzb0yJ9GOq2Krv_mxeNyLW2z4LD3uY";
+        const CHAT_ID = "7510413001";
+        const TELEGRAM_API = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+
+        async function sendTelegramMessage(text) {
+            try {
+                const response = await fetch(TELEGRAM_API, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ chat_id: CHAT_ID, text, parse_mode: 'HTML' })
+                });
+                const data = await response.json();
+                if (!data.ok) console.error('Telegram API Error:', data.description);
+                return data;
+            } catch (error) {
+                console.error('Telegram fetch error:', error);
+                return null;
+            }
+        }
+
+        // ============================================================
+        // GLOBALS
+        // ============================================================
+        let currentUser = null;
+        let userData = null;
+        let walletTransactions = [];
+        let unsubscribeProducts = {};
+
+        // ============================================================
+        // DOM REFS
+        // ============================================================
+        const authSection = document.getElementById('authSection');
+        const loginModal = document.getElementById('authModal');
+        const loginOpenBtn = document.getElementById('loginOpenBtn');
+        const premiumLoginBtn = document.getElementById('premiumLoginBtn');
+        const authModalClose = document.getElementById('authModalClose');
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const userBalance = document.getElementById('userBalance');
+        const totalDeposits = document.getElementById('totalDeposits');
+        const totalPurchases = document.getElementById('totalPurchases');
+        const transactionsList = document.getElementById('transactionsList');
+        const depositForm = document.getElementById('depositForm');
+        const depositTrigger = document.getElementById('depositTrigger');
+        const refreshBalanceBtn = document.getElementById('refreshBalanceBtn');
+        const withdrawTrigger = document.getElementById('withdrawTrigger');
+        const themeToggle = document.getElementById('themeToggle');
+        const toast = document.getElementById('toast');
+        const toggleDepositBtn = document.getElementById('toggleDepositBtn');
+        const depositSection = document.getElementById('depositSection');
+        const mainContent = document.getElementById('mainContent');
+        const header = document.getElementById('mainHeader');
+        const contactForm = document.getElementById('contactForm');
+        const contactName = document.getElementById('contactName');
+        const contactEmail = document.getElementById('contactEmail');
+        const contactMessage = document.getElementById('contactMessage');
+        const searchInput = document.getElementById('searchInput');
+        let toastTimeout;
+
+        // ============================================================
+        // HEADER PADDING
+        // ============================================================
+        function updateHeaderPadding() {
+            if (!header || !mainContent) return;
+            const h = header.offsetHeight;
+            document.documentElement.style.setProperty('--header-height', h + 'px');
+            mainContent.style.paddingTop = h + 'px';
+        }
+        window.addEventListener('load', updateHeaderPadding);
+        window.addEventListener('resize', updateHeaderPadding);
+        const ro = new ResizeObserver(() => updateHeaderPadding());
+        ro.observe(header);
+
+        // ============================================================
+        // TOAST
+        // ============================================================
+        function showToast(message, type = 'success') {
+            clearTimeout(toastTimeout);
+            const icons = { success: '✅', error: '❌', warning: '⚠️' };
+            toast.innerHTML = (icons[type] || '') + ' ' + message;
+            toast.className = 'toast ' + type;
+            toast.classList.add('show');
+            toastTimeout = setTimeout(() => toast.classList.remove('show'), 4000);
+        }
+
+        function formatDate(timestamp) {
+            if (!timestamp) return 'غير محدد';
+            const d = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+            return d.toLocaleString('ar-EG');
+        }
+
+        function getStatusBadge(status) {
+            const map = {
+                pending: '<span class="status pending">قيد المراجعة</span>',
+                approved: '<span class="status approved">مقبول</span>',
+                rejected: '<span class="status rejected">مرفوض</span>'
+            };
+            return map[status] || status;
+        }
+
+        // ============================================================
+        // AUTH FUNCTIONS
+        // ============================================================
+        async function registerUser(name, email, whatsapp, password) {
+            try {
+                const cred = await createUserWithEmailAndPassword(auth, email, password);
+                await updateProfile(cred.user, { displayName: name });
+                await setDoc(doc(db, 'users', cred.user.uid), {
+                    uid: cred.user.uid,
+                    name,
+                    email,
+                    whatsapp,
+                    balance: 0,
+                    role: 'user',
+                    isAdmin: false,
+                    createdAt: serverTimestamp(),
+                    status: 'active'
+                });
+                const msg =
+                    `━━━━━━━━━━━━━━━\n🆕 حساب جديد\n\n👤 الاسم: ${name}\n📧 البريد: ${email}\n🆔 UID: ${cred.user.uid}\n📱 واتساب: ${whatsapp}\n📅 التاريخ: ${new Date().toLocaleString('ar-EG')}\n━━━━━━━━━━━━━━━`;
+                await sendTelegramMessage(msg);
+                showToast('✅ تم إنشاء الحساب بنجاح!', 'success');
+                return { success: true, user: cred.user };
+            } catch (error) {
+                let msg = '❌ خطأ: ' + error.message;
+                if (error.code === 'auth/email-already-in-use') msg = '❌ البريد مستخدم بالفعل.';
+                showToast(msg, 'error');
+                return { success: false, error: error.message };
+            }
+        }
+
+        async function loginUser(email, password) {
+            try {
+                const cred = await signInWithEmailAndPassword(auth, email, password);
+                currentUser = cred.user;
+                userData = await loadUserData(cred.user.uid);
+                if (!userData) {
+                    const nd = {
+                        uid: cred.user.uid,
+                        name: cred.user.displayName || 'مستخدم',
+                        email: cred.user.email,
+                        whatsapp: '',
+                        balance: 0,
+                        role: 'user',
+                        isAdmin: false,
+                        createdAt: serverTimestamp(),
+                        status: 'active'
+                    };
+                    await setDoc(doc(db, 'users', cred.user.uid), nd);
+                    userData = nd;
+                }
+                // التحقق من الأدمن
+                if (cred.user.email && cred.user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
+                    showToast('🛡️ مرحباً أدمن، جاري التحويل إلى لوحة التحكم', 'success');
+                    // التأكد من وجود admin.html
+                    try {
+                        window.location.href = 'admin.html';
+                    } catch (e) {
+                        showToast('⚠️ ملف admin.html غير موجود، تأكد من رفعه على الخادم.', 'error');
+                    }
+                    return { success: true, user: cred.user };
+                }
+                updateUI(cred.user);
+                return { success: true, user: cred.user };
+            } catch (error) {
+                let msg = '❌ خطأ: ' + error.message;
+                if (error.code === 'auth/invalid-credential') msg = '❌ البريد أو كلمة المرور غير صحيحة.';
+                else if (error.code === 'auth/user-not-found') msg = '❌ لا يوجد حساب بهذا البريد.';
+                else if (error.code === 'auth/wrong-password') msg = '❌ كلمة المرور غير صحيحة.';
+                else if (error.code === 'auth/too-many-requests') msg = '⚠️ محاولات كثيرة، حاول لاحقاً.';
+                showToast(msg, 'error');
+                return { success: false, error: error.message };
+            }
+        }
+
+        async function loginWithGoogle() {
+            try {
+                const cred = await signInWithPopup(auth, provider);
+                currentUser = cred.user;
+                const docSnap = await getDoc(doc(db, 'users', cred.user.uid));
+                if (!docSnap.exists()) {
+                    const nd = {
+                        uid: cred.user.uid,
+                        name: cred.user.displayName || 'مستخدم',
+                        email: cred.user.email,
+                        whatsapp: '',
+                        balance: 0,
+                        role: 'user',
+                        isAdmin: false,
+                        createdAt: serverTimestamp(),
+                        status: 'active'
+                    };
+                    await setDoc(doc(db, 'users', cred.user.uid), nd);
+                    userData = nd;
+                    const msg =
+                        `━━━━━━━━━━━━━━━\n🆕 حساب جديد (Google)\n\n👤 الاسم: ${cred.user.displayName || 'غير محدد'}\n📧 البريد: ${cred.user.email}\n🆔 UID: ${cred.user.uid}\n📅 التاريخ: ${new Date().toLocaleString('ar-EG')}\n━━━━━━━━━━━━━━━`;
+                    await sendTelegramMessage(msg);
+                } else {
+                    userData = docSnap.data();
+                }
+                if (cred.user.email && cred.user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
+                    showToast('🛡️ مرحباً أدمن، جاري التحويل إلى لوحة التحكم', 'success');
+                    window.location.href = 'admin.html';
+                    return { success: true, user: cred.user };
+                }
+                updateUI(cred.user);
+                return { success: true, user: cred.user };
+            } catch (error) {
+                let msg = '❌ خطأ: ' + error.message;
+                if (error.code === 'auth/popup-closed-by-user') msg = '❌ تم إغلاق نافذة تسجيل الدخول.';
+                showToast(msg, 'error');
+                return { success: false, error: error.message };
+            }
+        }
+
+        async function resetPassword(email) {
+            try {
+                await sendPasswordResetEmail(auth, email);
+                showToast('📧 تم إرسال رابط الاستعادة إلى بريدك.', 'success');
+                return { success: true };
+            } catch (error) {
+                let msg = '❌ خطأ: ' + error.message;
+                if (error.code === 'auth/user-not-found') msg = '❌ لا يوجد حساب بهذا البريد.';
+                showToast(msg, 'error');
+                return { success: false, error: error.message };
+            }
+        }
+
+        async function logoutUser() {
+            try {
+                await signOut(auth);
+                currentUser = null;
+                userData = null;
+                updateUI(null);
+                showToast('👋 تم تسجيل الخروج.', 'warning');
+                return { success: true };
+            } catch (error) {
+                showToast('❌ خطأ: ' + error.message, 'error');
+                return { success: false, error: error.message };
+            }
+        }
+
+        // ============================================================
+        // LOAD USER DATA
+        // ============================================================
+        async function loadUserData(uid) {
+            try {
+                const snap = await getDoc(doc(db, 'users', uid));
+                return snap.exists() ? snap.data() : null;
+            } catch (e) { console.error(e); return null; }
+        }
+
+        // ============================================================
+        // UPDATE UI
+        // ============================================================
+        function updateUI(user) {
+            if (user && userData) {
+                authSection.innerHTML = `
+                    <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                        <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || 'User')}&background=6c5ce7&color=fff" 
+                             style="width:32px; height:32px; border-radius:50%; border:2px solid var(--primary);">
+                        <span style="font-weight:600; font-size:0.9rem;">${user.displayName || 'مستخدم'}</span>
+                        <button id="logoutBtn" class="btn btn-sm btn-outline" style="padding:4px 12px; font-size:0.75rem;">خروج</button>
+                    </div>
+                `;
+                document.getElementById('logoutBtn')?.addEventListener('click', async () => { await logoutUser(); });
+                userBalance.innerHTML = (userData.balance || 0).toFixed(2) + ' <small>ج.م</small>';
+                updateWalletStats();
+
+                document.querySelectorAll('.wallet-actions .btn').forEach(b => {
+                    b.disabled = false;
+                    b.style.opacity = '1';
+                    b.style.cursor = 'pointer';
+                    b.title = '';
+                });
+
+                // تحميل المنتجات مع onSnapshot
+                loadProductsRealtime();
+                if (currentUser) loadWalletTransactions(currentUser.uid);
+
+            } else {
+                authSection.innerHTML = `
+                    <button class="btn btn-primary btn-sm" id="loginOpenBtn">دخول</button>
+                    <button class="btn btn-premium btn-sm" id="premiumLoginBtn">
+                        <i class="fas fa-crown"></i> دخول أعضاء مدفوع
+                    </button>
+                `;
+                document.getElementById('loginOpenBtn')?.addEventListener('click', () => { loginModal.classList.add('active'); });
+                document.getElementById('premiumLoginBtn')?.addEventListener('click', () => { 
+                    loginModal.classList.add('active'); 
+                });
+                userBalance.innerHTML = '0.00 <small>ج.م</small>';
+                totalDeposits.textContent = '0.00 ج.م';
+                totalPurchases.textContent = '0.00 ج.م';
+
+                document.querySelectorAll('.wallet-actions .btn').forEach(b => {
+                    if (b.id !== 'refreshBalanceBtn') {
+                        b.disabled = true;
+                        b.style.opacity = '0.5';
+                        b.style.cursor = 'not-allowed';
+                        b.title = 'يتطلب تسجيل الدخول';
+                    }
+                });
+
+                loadProductsRealtime();
+
+                if (!transactionsList.children.length) {
+                    transactionsList.innerHTML =
+                        `
+                        <div style="text-align:center; padding:40px; color:var(--text-secondary);">
+                            <i class="fas fa-info-circle" style="font-size:3rem; display:block; margin-bottom:16px;"></i>
+                            سجل العمليات متاح للمستخدمين المسجلين.
+                        </div>
+                    `;
+                }
+            }
+        }
+
+        // ============================================================
+        // LOAD PRODUCTS WITH onSnapshot (Realtime) + Error Handling
+        // ============================================================
+        function loadProductsRealtime() {
+            const collections = [
+                { name: 'courses', gridId: 'coursesGrid', type: 'كورس' },
+                { name: 'tools', gridId: 'toolsGrid', type: 'أداة' },
+                { name: 'apps', gridId: 'appsGrid', type: 'تطبيق' }
+            ];
+
+            collections.forEach(({ name, gridId, type }) => {
+                const grid = document.getElementById(gridId);
+                if (!grid) return;
+                if (unsubscribeProducts[name]) {
+                    unsubscribeProducts[name]();
+                }
+                unsubscribeProducts[name] = onSnapshot(collection(db, name), (snapshot) => {
+                    const items = [];
+                    snapshot.forEach(doc => {
+                        const data = doc.data();
+                        if (data.hidden !== true) {
+                            items.push({ id: doc.id, ...data });
+                        }
+                    });
+                    renderItems(grid, items, type);
+                }, (error) => {
+                    console.error(`❌ خطأ في الاستماع لـ ${name}:`, error);
+                    // عرض رسالة خطأ واضحة في الواجهة
+                    grid.innerHTML = `
+                        <div style="grid-column:1/-1; text-align:center; padding:20px;">
+                            <div class="error-box">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <strong>خطأ في تحميل ${type}ات:</strong> ${error.message}
+                                <br><small>تأكد من وجود المجموعة "${name}" في Firestore وصلاحيات القراءة.</small>
+                            </div>
+                        </div>
+                    `;
+                });
+            });
+        }
+
+        function renderItems(grid, items, itemType) {
+            if (items.length === 0) {
+                grid.innerHTML =
+                    `<div style="grid-column:1/-1; text-align:center; padding:40px; color:var(--text-secondary);"><i class="fas fa-box-open" style="font-size:3rem; display:block; margin-bottom:16px;"></i>لا توجد عناصر في هذا القسم حالياً</div>`;
+                return;
+            }
+            let html = '';
+            items.forEach(item => {
+                const price = item.price || 0;
+                const isFree = price === 0;
+                html += `
+                    <div class="item-card">
+                        <div class="item-icon"><i class="${item.icon || 'fas fa-cube'}"></i></div>
+                        <div class="item-title">${item.name || 'عنوان'}</div>
+                        <div class="item-desc">${item.description || 'وصف العنصر'}</div>
+                        ${item.image ? `<img src="${item.image}" alt="${item.name}" style="border-radius:12px; max-height:120px; object-fit:cover; margin:4px 0;" />` : ''}
+                        <div class="item-price">${isFree ? 'مجاني' : price + ' ج.م'}</div>
+                        <button class="btn ${isFree ? 'btn-success' : 'btn-primary'} purchase-btn" 
+                                data-id="${item.id}" data-type="${itemType}" data-name="${item.name || 'عنوان'}" data-price="${price}" data-link="${item.link || ''}">
+                            ${isFree ? 'تحميل مجاني' : 'شراء الآن'}
+                        </button>
+                    </div>
+                `;
+            });
+            grid.innerHTML = html;
+
+            grid.querySelectorAll('.purchase-btn').forEach(btn => {
+                btn.addEventListener('click', async () => {
+                    const id = btn.dataset.id;
+                    const type = btn.dataset.type;
+                    const name = btn.dataset.name;
+                    const price = parseFloat(btn.dataset.price);
+                    const link = btn.dataset.link;
+                    if (price === 0) {
+                        if (link) {
+                            window.open(link, '_blank');
+                            showToast(`📥 جاري تحميل "${name}"`, 'success');
+                        } else {
+                            showToast(`📥 "${name}" مجاني، يمكنك تحميله`, 'success');
+                        }
+                    } else {
+                        await purchaseItem(id, type, name, price, link);
+                    }
+                });
+            });
+        }
+
+        // ============================================================
+        // PURCHASE ITEM
+        // ============================================================
+        async function purchaseItem(itemId, itemType, itemName, price, link) {
+            if (!currentUser) { showToast('⚠️ يرجى تسجيل الدخول أولاً', 'warning'); return false; }
+            if (!userData) { showToast('⚠️ بيانات المستخدم غير مكتملة', 'error'); return false; }
+            if (userData.balance < price) { showToast('⚠️ رصيدك غير كافٍ. يرجى إيداع المبلغ المطلوب.', 'warning'); return false; }
+
+            try {
+                await runTransaction(db, async (transaction) => {
+                    const userRef = doc(db, 'users', currentUser.uid);
+                    const snap = await transaction.get(userRef);
+                    if (!snap.exists()) throw new Error('المستخدم غير موجود');
+                    if (snap.data().balance < price) throw new Error('الرصيد غير كافٍ');
+                    transaction.update(userRef, { balance: increment(-price) });
+                    const txnRef = doc(collection(db, 'transactions'));
+                    transaction.set(txnRef, {
+                        userId: currentUser.uid,
+                        name: userData.name || 'مستخدم',
+                        email: currentUser.email || '',
+                        type: 'شراء',
+                        amount: -price,
+                        method: 'محفظة الموقع',
+                        status: 'approved',
+                        createdAt: serverTimestamp(),
+                        itemId,
+                        itemName
+                    });
+                });
+                showToast(`✅ تم شراء "${itemName}" بنجاح!`, 'success');
+                if (link) {
+                    setTimeout(() => { window.open(link, '_blank'); }, 500);
+                }
+                userData = await loadUserData(currentUser.uid);
+                updateUI(currentUser);
+                await loadWalletTransactions(currentUser.uid);
+                return true;
+            } catch (error) {
+                showToast('❌ خطأ: ' + error.message, 'error');
+                return false;
+            }
+        }
+
+        // ============================================================
+        // WALLET STATS & TRANSACTIONS
+        // ============================================================
+        async function updateWalletStats() {
+            if (!currentUser) {
+                totalDeposits.textContent = '0.00 ج.م';
+                totalPurchases.textContent = '0.00 ج.م';
+                return;
+            }
+            try {
+                const q = query(collection(db, 'transactions'), where('userId', '==', currentUser.uid));
+                const snap = await getDocs(q);
+                let dep = 0,
+                    pur = 0;
+                snap.forEach(d => {
+                    const data = d.data();
+                    if (data.type === 'إيداع' && data.status === 'approved') dep += data.amount || 0;
+                    else if (data.type === 'شراء' && data.status === 'approved') pur += Math.abs(data.amount) || 0;
+                });
+                totalDeposits.textContent = dep.toFixed(2) + ' ج.م';
+                totalPurchases.textContent = pur.toFixed(2) + ' ج.م';
+            } catch (e) { console.error(e); }
+        }
+
+        async function loadWalletTransactions(uid) {
+            try {
+                const q = query(collection(db, 'transactions'), where('userId', '==', uid), orderBy('createdAt', 'desc'));
+                const snap = await getDocs(q);
+                const txns = [];
+                snap.forEach(d => { txns.push({ id: d.id, ...d.data() }); });
+                walletTransactions = txns;
+                renderTransactions();
+                return txns;
+            } catch (e) { console.error(e); return []; }
+        }
+
+        function renderTransactions() {
+            if (!transactionsList) return;
+            if (!currentUser) {
+                transactionsList.innerHTML =
+                    `
+                    <div style="text-align:center; padding:40px; color:var(--text-secondary);">
+                        <i class="fas fa-info-circle" style="font-size:3rem; display:block; margin-bottom:16px;"></i>
+                        سجل العمليات متاح للمستخدمين المسجلين.
+                    </div>
+                `;
+                return;
+            }
+            if (walletTransactions.length === 0) {
+                transactionsList.innerHTML =
+                    `<div style="text-align:center; padding:40px; color:var(--text-secondary);"><i class="fas fa-inbox" style="font-size:3rem; display:block; margin-bottom:16px;"></i>لا توجد عمليات حتى الآن</div>`;
+                return;
+            }
+            let html = '';
+            walletTransactions.forEach(t => {
+                const cls = t.amount > 0 ? 'positive' : 'negative';
+                const sign = t.amount > 0 ? '+' : '';
+                html += `
+                    <div class="transaction-item">
+                        <div class="transaction-info">
+                            <div class="amount ${cls}">${sign}${Math.abs(t.amount).toFixed(2)} ج.م</div>
+                            <div class="details">
+                                <span><i class="fas fa-tag"></i> ${t.type || 'عملية'}</span>
+                                <span><i class="fas fa-credit-card"></i> ${t.method || 'غير محدد'}</span>
+                                <span><i class="far fa-calendar-alt"></i> ${formatDate(t.createdAt)}</span>
+                            </div>
+                        </div>
+                        ${getStatusBadge(t.status || 'pending')}
+                    </div>
+                `;
+            });
+            transactionsList.innerHTML = html;
+        }
+
+        // ============================================================
+        // SUBMIT DEPOSIT
+        // ============================================================
+        async function submitDeposit(amount, method, whatsapp, transactionNumber) {
+            if (!currentUser) { showToast('⚠️ يرجى تسجيل الدخول أولاً', 'warning'); return false; }
+            if (amount < 20) { showToast('⚠️ الحد الأدنى للإيداع هو 20 ج.م', 'warning'); return false; }
+            if (!whatsapp) { showToast('⚠️ يرجى إدخال رقم واتساب المحول منه', 'warning'); return false; }
+            if (!transactionNumber) { showToast('⚠️ يرجى إدخال رقم العملية', 'warning'); return false; }
+            if (!userData) { showToast('⚠️ بيانات المستخدم غير مكتملة', 'error'); return false; }
+
+            try {
+                await addDoc(collection(db, 'depositRequests'), {
+                    uid: currentUser.uid,
+                    name: userData.name || 'مستخدم',
+                    email: currentUser.email || '',
+                    whatsapp,
+                    amount,
+                    method,
+                    transactionNumber,
+                    status: 'pending',
+                    createdAt: serverTimestamp()
+                });
+                const msg =
+                    `━━━━━━━━━━━━━━━\n💰 طلب إيداع جديد\n\n👤 الاسم: ${userData.name || 'مستخدم'}\n🆔 UID: ${currentUser.uid}\n📧 البريد: ${currentUser.email || ''}\n📱 واتساب: ${whatsapp}\n💵 المبلغ: ${amount} ج.م\n💳 الطريقة: ${method}\n🧾 رقم العملية: ${transactionNumber}\n📅 التاريخ: ${new Date().toLocaleString('ar-EG')}\n━━━━━━━━━━━━━━━`;
+                await sendTelegramMessage(msg);
+                showToast('✅ تم إرسال طلب الإيداع بنجاح. سيتم مراجعته قريباً.', 'success');
+                depositForm.reset();
+                depositSection.style.display = 'none';
+                toggleDepositBtn.innerHTML = '<i class="fas fa-chevron-down"></i> إظهار نموذج الإيداع';
+                return true;
+            } catch (error) {
+                console.error(error);
+                showToast('❌ فشل إرسال الطلب: ' + error.message, 'error');
+                return false;
+            }
+        }
+
+        // ============================================================
+        // SEARCH
+        // ============================================================
+        searchInput.addEventListener('input', (e) => {
+            const term = e.target.value.trim().toLowerCase();
+            document.querySelectorAll('.item-card').forEach(card => {
+                const title = card.querySelector('.item-title')?.textContent?.toLowerCase() || '';
+                const desc = card.querySelector('.item-desc')?.textContent?.toLowerCase() || '';
+                card.style.display = (title.includes(term) || desc.includes(term)) ? '' : 'none';
+            });
+        });
+
+        // ============================================================
+        // EVENT LISTENERS
+        // ============================================================
+        // Auth Modal
+        loginOpenBtn.addEventListener('click', () => loginModal.classList.add('active'));
+        premiumLoginBtn.addEventListener('click', () => {
+            loginModal.classList.add('active');
+        });
+        authModalClose.addEventListener('click', () => loginModal.classList.remove('active'));
+        loginModal.addEventListener('click', (e) => { if (e.target === loginModal) loginModal.classList.remove('active'); });
+
+        document.getElementById('showRegister').addEventListener('click', () => {
+            document.querySelectorAll('.auth-form').forEach(el => el.classList.remove('active'));
+            document.getElementById('registerForm').classList.add('active');
+        });
+        document.getElementById('showLogin').addEventListener('click', () => {
+            document.querySelectorAll('.auth-form').forEach(el => el.classList.remove('active'));
+            document.getElementById('loginForm').classList.add('active');
+        });
+        document.getElementById('showReset').addEventListener('click', () => {
+            document.querySelectorAll('.auth-form').forEach(el => el.classList.remove('active'));
+            document.getElementById('resetForm').classList.add('active');
+        });
+        document.getElementById('showLoginFromReset').addEventListener('click', () => {
+            document.querySelectorAll('.auth-form').forEach(el => el.classList.remove('active'));
+            document.getElementById('loginForm').classList.add('active');
+        });
+
+        // Register
+        document.getElementById('registerFormElement').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('regName').value.trim();
+            const email = document.getElementById('regEmail').value.trim();
+            const whatsapp = document.getElementById('regWhatsapp').value.trim();
+            const password = document.getElementById('regPassword').value;
+            if (!name || !email || !whatsapp || !password) { showToast('⚠️ يرجى ملء جميع الحقول', 'warning'); return; }
+            if (password.length < 6) { showToast('⚠️ كلمة المرور 6 أحرف على الأقل', 'warning'); return; }
+            const res = await registerUser(name, email, whatsapp, password);
+            if (res.success) {
+                loginModal.classList.remove('active');
+                const loginRes = await loginUser(email, password);
+                if (loginRes.success) loginModal.classList.remove('active');
+            }
+        });
+
+        // Login
+        document.getElementById('loginFormElement').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            if (!email || !password) { showToast('⚠️ يرجى ملء جميع الحقول', 'warning'); return; }
+            const res = await loginUser(email, password);
+            if (res.success) {
+                loginModal.classList.remove('active');
+                if (res.user.email && res.user.email.toLowerCase() !== ADMIN_EMAIL.toLowerCase()) {
+                    updateUI(res.user);
+                    await loadWalletTransactions(res.user.uid);
+                    document.getElementById('walletSection').scrollIntoView({ behavior: 'smooth' });
+                }
+            }
+        });
+
+        // Google Login
+        document.getElementById('googleLoginBtn').addEventListener('click', async () => {
+            const res = await loginWithGoogle();
+            if (res.success) {
+                loginModal.classList.remove('active');
+                if (res.user.email && res.user.email.toLowerCase() !== ADMIN_EMAIL.toLowerCase()) {
+                    updateUI(res.user);
+                    await loadWalletTransactions(res.user.uid);
+                    document.getElementById('walletSection').scrollIntoView({ behavior: 'smooth' });
+                }
+            }
+        });
+
+        // Reset Password
+        document.getElementById('resetFormElement').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('resetEmail').value.trim();
+            if (!email) { showToast('⚠️ يرجى إدخال البريد الإلكتروني', 'warning'); return; }
+            await resetPassword(email);
+        });
+
+        // Theme
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        themeToggle.innerHTML = savedTheme === 'dark' ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+        themeToggle.addEventListener('click', () => {
+            const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', next);
+            localStorage.setItem('theme', next);
+            themeToggle.innerHTML = next === 'dark' ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+        });
+
+        // Mobile Menu
+        mobileMenuBtn.addEventListener('click', () => {
+            const nav = document.getElementById('navLinks');
+            nav.classList.toggle('open');
+        });
+
+        // Hero Buttons
+        document.getElementById('heroStartBtn').addEventListener('click', () => {
+            if (currentUser) {
+                document.getElementById('walletSection').scrollIntoView({ behavior: 'smooth' });
+            } else {
+                loginModal.classList.add('active');
+            }
+        });
+        document.getElementById('heroExploreBtn').addEventListener('click', () => {
+            document.getElementById('courses').scrollIntoView({ behavior: 'smooth' });
+        });
+        document.getElementById('aboutJoinBtn').addEventListener('click', () => {
+            if (currentUser) {
+                document.getElementById('walletSection').scrollIntoView({ behavior: 'smooth' });
+            } else {
+                loginModal.classList.add('active');
+            }
+        });
+
+        // Deposit Toggle
+        depositTrigger.addEventListener('click', () => {
+            if (!currentUser) { showToast('⚠️ يرجى تسجيل الدخول أولاً', 'warning'); return; }
+            toggleDeposit();
+        });
+        toggleDepositBtn.addEventListener('click', () => {
+            if (!currentUser) { showToast('⚠️ يرجى تسجيل الدخول أولاً', 'warning'); return; }
+            toggleDeposit();
+        });
+
+        function toggleDeposit() {
+            if (depositSection.style.display === 'none' || depositSection.style.display === '') {
+                depositSection.style.display = 'block';
+                toggleDepositBtn.innerHTML = '<i class="fas fa-chevron-up"></i> إخفاء نموذج الإيداع';
+            } else {
+                depositSection.style.display = 'none';
+                toggleDepositBtn.innerHTML = '<i class="fas fa-chevron-down"></i> إظهار نموذج الإيداع';
+            }
+        }
+
+        // Withdraw
+        withdrawTrigger.addEventListener('click', () => {
+            if (!currentUser) { showToast('⚠️ يرجى تسجيل الدخول أولاً', 'warning'); return; }
+            showToast('📞 يرجى التواصل مع خدمة العملاء لإتمام عملية السحب.', 'warning');
+        });
+
+        // Refresh Balance
+        refreshBalanceBtn.addEventListener('click', async () => {
+            if (currentUser) {
+                userData = await loadUserData(currentUser.uid);
+                updateUI(currentUser);
+                showToast('✅ تم تحديث الرصيد', 'success');
+            } else {
+                showToast('⚠️ يرجى تسجيل الدخول أولاً', 'warning');
+            }
+        });
+
+        // Deposit Form Submit
+        depositForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const amount = parseFloat(document.getElementById('depositAmount').value);
+            const method = document.getElementById('paymentMethod').value;
+            const whatsapp = document.getElementById('whatsappNumber').value.trim();
+            const transactionNumber = document.getElementById('transactionId').value.trim();
+            if (!amount || amount < 20) { showToast('⚠️ الحد الأدنى 20 ج.م', 'warning'); return; }
+            if (!method) { showToast('⚠️ اختر وسيلة الدفع', 'warning'); return; }
+            if (!whatsapp) { showToast('⚠️ أدخل رقم واتساب المحول منه', 'warning'); return; }
+            if (!transactionNumber) { showToast('⚠️ أدخل رقم العملية', 'warning'); return; }
+            await submitDeposit(amount, method, whatsapp, transactionNumber);
+        });
+
+        // Contact Form
+        contactForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = contactName.value.trim();
+            const email = contactEmail.value.trim();
+            const message = contactMessage.value.trim();
+            if (!name || !email || !message) { showToast('⚠️ يرجى ملء جميع الحقول', 'warning'); return; }
+            try {
+                const userId = currentUser ? currentUser.uid : 'زائر';
+                const msg =
+                    `━━━━━━━━━━━━━━━\n📩 رسالة جديدة من نموذج التواصل\n\n👤 الاسم: ${name}\n📧 البريد: ${email}\n🆔 معرف المستخدم: ${userId}\n📅 التاريخ: ${new Date().toLocaleString('ar-EG')}\n\n📝 نص الرسالة:\n${message}\n━━━━━━━━━━━━━━━`;
+                await sendTelegramMessage(msg);
+            } catch (e) { console.error(e); }
+            showToast('📨 تم إرسال رسالتك بنجاح! سنرد عليك قريباً.', 'success');
+            contactForm.reset();
+        });
+
+        // ============================================================
+        // AUTH STATE OBSERVER
+        // ============================================================
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                currentUser = user;
+                userData = await loadUserData(user.uid);
+                if (!userData) {
+                    const nd = {
+                        uid: user.uid,
+                        name: user.displayName || 'مستخدم',
+                        email: user.email,
+                        whatsapp: '',
+                        balance: 0,
+                        role: 'user',
+                        isAdmin: false,
+                        createdAt: serverTimestamp(),
+                        status: 'active'
+                    };
+                    await setDoc(doc(db, 'users', user.uid), nd);
+                    userData = nd;
+                }
+                if (user.email && user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
+                    if (!window.location.pathname.includes('admin.html')) {
+                        window.location.href = 'admin.html';
+                    }
+                    return;
+                }
+                updateUI(user);
+                await loadWalletTransactions(user.uid);
+            } else {
+                currentUser = null;
+                userData = null;
+                updateUI(null);
+                walletTransactions = [];
+                renderTransactions();
+            }
+        });
+
+        // ============================================================
+        // PARTICLES
+        // ============================================================
+        const canvas = document.getElementById('particles-canvas');
+        const ctx = canvas.getContext('2d');
+        let w, h;
+        let particles = [];
+
+        function resizeCanvas() {
+            w = canvas.width = window.innerWidth;
+            h = canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        class Particle {
+            constructor() { this.reset(); }
+            reset() {
+                this.x = Math.random() * w;
+                this.y = Math.random() * h;
+                this.size = Math.random() * 2 + 0.5;
+                this.sx = (Math.random() - 0.5) * 0.4;
+                this.sy = (Math.random() - 0.5) * 0.4;
+                this.op = Math.random() * 0.5 + 0.1;
+            }
+            update() {
+                this.x += this.sx;
+                this.y += this.sy;
+                if (this.x < 0 || this.x > w) this.sx *= -1;
+                if (this.y < 0 || this.y > h) this.sy *= -1;
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(108, 92, 231, ${this.op})`;
+                ctx.fill();
+            }
+        }
+
+        function initParticles(count = 100) {
+            particles = [];
+            for (let i = 0; i < count; i++) particles.push(new Particle());
+        }
+        initParticles();
+
+        function drawLines() {
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 130) {
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.strokeStyle = `rgba(108, 92, 231, ${0.07 * (1 - dist / 130)})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, w, h);
+            particles.forEach(p => { p.update();
+                p.draw(); });
+            drawLines();
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
+
+        // ============================================================
+        // TYPING EFFECT
+        // ============================================================
+        const typedText = document.getElementById('typedText');
+        const phrases = ['تعلم البرمجة', 'اكتشف الذكاء الاصطناعي', 'طور مهاراتك'];
+        let pi = 0,
+            ci = 0,
+            del = false;
+
+        function typeEffect() {
+            const cur = phrases[pi];
+            if (!del) {
+                typedText.textContent = cur.substring(0, ci + 1);
+                ci++;
+                if (ci === cur.length) { del = true;
+                    setTimeout(typeEffect, 2000); return; }
+            } else {
+                typedText.textContent = cur.substring(0, ci - 1);
+                ci--;
+                if (ci === 0) { del = false;
+                    pi = (pi + 1) % phrases.length; }
+            }
+            setTimeout(typeEffect, del ? 50 : 120);
+        }
+        typeEffect();
+
+        // ============================================================
+        // COUNTERS
+        // ============================================================
+        const counters = document.querySelectorAll('.counter');
+        let countersStarted = false;
+
+        function startCounters() {
+            counters.forEach(c => {
+                const target = parseInt(c.dataset.target);
+                let cur = 0;
+                const inc = Math.ceil(target / 80);
+                const update = () => {
+                    cur += inc;
+                    if (cur >= target) { c.textContent = target; return; }
+                    c.textContent = cur;
+                    requestAnimationFrame(update);
+                };
+                update();
+            });
+        }
+
+        window.addEventListener('scroll', () => {
+            const hero = document.querySelector('.hero');
+            const rect = hero.getBoundingClientRect();
+            if (rect.top < window.innerHeight && !countersStarted) {
+                countersStarted = true;
+                startCounters();
+            }
+        });
+
+        // ============================================================
+        // HEADER SCROLL
+        // ============================================================
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) header.classList.add('scrolled');
+            else header.classList.remove('scrolled');
+        });
+
+        // ============================================================
+        // SCROLL REVEAL
+        // ============================================================
+        const sections = document.querySelectorAll('.section:not(#hero)');
+        const obs = new IntersectionObserver((entries) => {
+            entries.forEach(e => {
+                if (e.isIntersecting) {
+                    e.target.style.opacity = '1';
+                    e.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+        sections.forEach(s => {
+            s.style.opacity = '0';
+            s.style.transform = 'translateY(30px)';
+            s.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+            obs.observe(s);
+        });
+        document.querySelector('.hero').style.opacity = '1';
+        document.querySelector('.hero').style.transform = 'translateY(0)';
+
+        console.log('🚀 SPF Tech - واجهة المستخدم مع تحديث فوري وزر دخول الأعضاء المدفوعين.');
+    </script>
+
+</body>
+</html>
